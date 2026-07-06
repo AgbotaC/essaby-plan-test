@@ -1,0 +1,442 @@
+<style>
+  :root{
+    --cream:#FCF7EE; --paper:#FFFFFF; --ink:#17271E; --muted:#5F6E64;
+    --line:#E7E2D6; --line-soft:#F0EBDF;
+    --green:#1D9E75; --green-deep:#134B2E;
+    --prod:#1E8E5A; --prod-bg:#E4F1E8;
+    --livr:#274B84; --livr-bg:#E7EDF6;
+    --achat:#B85F26; --achat-bg:#F7EADC;
+    --ok:#1E8E5A;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0}
+  .wrap{
+    font-family:-apple-system,"Segoe UI",Roboto,system-ui,sans-serif;
+    background:var(--cream); color:var(--ink);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    max-width:660px; margin:0 auto; padding-bottom:56px;
+  }
+  .masthead{padding:26px 20px 18px; background:var(--green-deep); color:#fff}
+  .masthead .kicker{font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:#9FD9BE; font-weight:700; margin:0 0 6px}
+  .masthead h1{margin:0; font-size:1.6rem; font-weight:800; letter-spacing:-.01em; text-wrap:balance}
+  .masthead p{margin:8px 0 0; color:#D7E9DF; font-size:.95rem; max-width:52ch}
+
+  .tabs{position:sticky; top:0; z-index:5; display:flex; background:var(--cream); border-bottom:1px solid var(--line); box-shadow:0 1px 0 var(--line)}
+  .tab{flex:1 1 0; appearance:none; background:transparent; border:0; font:inherit; cursor:pointer; padding:13px 6px 11px; color:var(--muted); font-weight:700; font-size:.88rem; border-bottom:3px solid transparent; transition:color .15s,border-color .15s; display:flex; align-items:center; justify-content:center; gap:5px; line-height:1.15}
+  .tab .em{font-size:1.05rem}
+  .tab[aria-selected="true"]{color:var(--green-deep); border-bottom-color:var(--green)}
+  .tab:focus-visible{outline:3px solid var(--green); outline-offset:-3px}
+
+  .panel{padding:20px 18px 8px}
+  .panel[hidden]{display:none}
+
+  h2{font-size:1.18rem; font-weight:800; margin:2px 0 4px; letter-spacing:-.01em; text-wrap:balance}
+  .lead{color:var(--muted); margin:0 0 18px; font-size:.98rem}
+  .eyebrow{font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--green); margin:26px 0 10px}
+
+  .roles{display:grid; gap:10px; margin:0 0 6px}
+  .role{display:flex; gap:12px; align-items:flex-start; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:13px 14px}
+  .role .ic{font-size:1.5rem; line-height:1.4}
+  .role b{display:block; font-size:1rem}
+  .role span{color:var(--muted); font-size:.92rem}
+
+  .flow{list-style:none; counter-reset:s; margin:0; padding:0; display:grid; gap:2px}
+  .flow li{counter-increment:s; display:flex; gap:12px; align-items:flex-start; padding:11px 0; border-bottom:1px solid var(--line-soft)}
+  .flow li:last-child{border-bottom:0}
+  .flow li::before{content:counter(s); flex:0 0 26px; height:26px; border-radius:50%; background:var(--green-deep); color:#fff; font-size:.82rem; font-weight:700; display:flex; align-items:center; justify-content:center; font-variant-numeric:tabular-nums}
+
+  .callout{background:var(--prod-bg); border:1px solid #BFE0CD; border-radius:var(--radius); padding:14px 15px; margin:8px 0 4px}
+  .callout b{color:var(--green-deep)}
+  .callout p{margin:6px 0 0; font-size:.93rem; color:#2C4A39}
+
+  table.checks{width:100%; border-collapse:collapse; font-size:.9rem; margin-top:4px}
+  table.checks th,table.checks td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+  table.checks th{font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted)}
+  table.checks td:first-child{font-weight:700; color:var(--livr)}
+
+  .coord{background:#FFF7E8; border:1px solid #EAD9AE; border-left:4px solid var(--achat); border-radius:12px; padding:13px 15px; margin:0 0 18px}
+  .coord b{color:var(--achat)}
+  .coord p{margin:5px 0 0; font-size:.92rem; color:#5B4526}
+  .login-chip{display:inline-flex; align-items:center; gap:7px; background:var(--green-deep); color:#fff; font-weight:700; font-size:.86rem; padding:6px 12px; border-radius:999px; margin-top:10px}
+  .login-chip code{font-family:ui-monospace,Menlo,Consolas,monospace; letter-spacing:.04em}
+
+  details.fiche{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); margin:0 0 12px; overflow:hidden}
+  details.fiche summary{list-style:none; cursor:pointer; padding:14px 15px; display:flex; align-items:center; gap:12px}
+  details.fiche summary::-webkit-details-marker{display:none}
+  .avatar{flex:0 0 42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.35rem; background:var(--b,#eee); border:1.5px solid var(--l,#ccc)}
+  .who{flex:1 1 auto; min-width:0}
+  .who .name{font-weight:800; font-size:1.02rem; line-height:1.2}
+  .who .badge{display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.03em; color:var(--l,#333); background:var(--b,#eee); padding:2px 9px; border-radius:999px; margin-top:3px}
+  .num{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.82rem; font-weight:700; color:var(--ink); background:var(--cream); border:1px solid var(--line); padding:4px 8px; border-radius:8px; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .chev{flex:0 0 auto; color:var(--muted); transition:transform .2s}
+  details[open] .chev{transform:rotate(90deg)}
+  .fiche-body{padding:2px 15px 16px; border-top:1px solid var(--line-soft)}
+  .fiche-body .stage{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--muted); margin:15px 0 6px}
+  .steps{margin:0; padding-left:0; list-style:none; display:grid; gap:9px}
+  .steps li{display:flex; gap:9px; align-items:flex-start; font-size:.94rem}
+  .steps li::before{content:""; flex:0 0 7px; height:7px; margin-top:8px; border-radius:50%; background:var(--l,#999)}
+  .steps li.chk::before{content:"✓"; background:transparent; color:var(--ok); font-weight:800; margin-top:0; font-size:.95rem; flex-basis:auto}
+  .steps li.chk{color:#2C4A39; font-weight:600}
+  .steps li.sub{font-size:.9rem; color:var(--muted)}
+  .steps li.sub::before{content:""; flex-basis:7px; height:1px; margin-top:12px; background:var(--line); border-radius:0}
+  b.btn{background:var(--green-deep); color:#fff; padding:1px 7px; border-radius:6px; font-size:.86rem; font-weight:700; white-space:nowrap}
+  em.hi{font-style:normal; background:#FCEFD9; padding:0 4px; border-radius:4px}
+
+  .footnote{color:var(--muted); font-size:.82rem; padding:18px 2px 0; border-top:1px solid var(--line-soft); margin-top:22px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="kicker">Essaby · Test bout-à-bout</p>
+    <h1>Plan de test — producteurs, acheteurs &amp; livreurs</h1>
+    <p>Deux équipes jouent le même achat simulé au Bénin, puis explorent toute l'appli. Trouve ta fiche, suis les étapes (les libellés entre « » sont exactement ceux de l'app), signale ce qui ne se met pas à jour tout seul.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="t-app" aria-controls="p-app" aria-selected="true"><span class="em">📱</span>L'appli</button>
+    <button class="tab" role="tab" id="t-fr" aria-controls="p-fr" aria-selected="false"><span class="em">🇫🇷</span>France</button>
+    <button class="tab" role="tab" id="t-bj" aria-controls="p-bj" aria-selected="false"><span class="em">🇧🇯</span>Bénin</button>
+    <button class="tab" role="tab" id="t-all" aria-controls="p-all" aria-selected="false"><span class="em">🔎</span>Tout tester</button>
+  </nav>
+
+  <!-- ===================== TAB 1 : L'APPLI ===================== -->
+  <section class="panel" id="p-app" role="tabpanel" aria-labelledby="t-app">
+    <h2>C'est quoi Essaby ?</h2>
+    <p class="lead">Une place de marché <strong>100&nbsp;% agricole</strong> pour l'Afrique de l'Ouest : on y vend uniquement des <strong>produits agricoles</strong> (récoltes, élevage, semences…), rien d'autre. Elle relie quatre types d'utilisateurs&nbsp;:</p>
+
+    <div class="roles">
+      <div class="role"><span class="ic">👨‍🌾</span><div><b>Producteur</b><span>Publie ses produits (ex. 50&nbsp;kg de tomates) et les vend.</span></div></div>
+      <div class="role"><span class="ic">🛒</span><div><b>Acheteur</b><span>Cherche un produit, le consulte, commande et paie.</span></div></div>
+      <div class="role"><span class="ic">🚚</span><div><b>Livreur</b><span>Va chercher la marchandise chez le producteur et la livre à l'acheteur.</span></div></div>
+      <div class="role"><span class="ic">👥</span><div><b>Agent</b><span>Aide un producteur qui lit/écrit difficilement : avec son accord, il utilise l'app <strong>à sa place</strong> (publier, gérer les commandes). Il gagne une petite <strong>commission (3&nbsp;%)</strong> sur les ventes qu'il facilite et <strong>ne touche jamais à l'argent</strong> du producteur. <em style="color:var(--muted)">(Expliqué ici, pas joué par les équipes aujourd'hui.)</em></span></div></div>
+    </div>
+
+    <div class="callout" style="background:var(--livr-bg);border-color:#C3D2EA;margin-top:14px">
+      <b style="color:var(--livr)">🌍 Multi-pays &amp; multi-monnaie</b>
+      <p style="color:#26364F">L'app s'adapte au pays de l'utilisateur (Bénin, Ghana, Nigeria…), à sa <strong>monnaie</strong> (FCFA, cedi, naira…) et à sa <strong>langue</strong>. Aujourd'hui, les deux équipes testent au <strong>Bénin, en FCFA</strong>.</p>
+    </div>
+
+    <p class="eyebrow">Pourquoi les gens l'adoptent</p>
+    <div class="roles">
+      <div class="role"><span class="ic">🤝</span><div><b>Vendre en direct</b><span>Le producteur fixe son prix et gagne plus, sans intermédiaire entre son champ et l'acheteur.</span></div></div>
+      <div class="role"><span class="ic">🔒</span><div><b>Paiement sécurisé</b><span>L'argent de l'acheteur est gardé et n'est <strong>libéré qu'à la livraison</strong>, confirmée par un code. Zéro arnaque.</span></div></div>
+      <div class="role"><span class="ic">🚚</span><div><b>Livraison intégrée</b><span>Un livreur vient charger chez le producteur et livre l'acheteur — avec <strong>suivi en direct sur la carte</strong>.</span></div></div>
+      <div class="role"><span class="ic">📦</span><div><b>Stock toujours juste</b><span>Chaque commande <strong>décompte automatiquement</strong> la quantité disponible du producteur : plus de survente.</span></div></div>
+      <div class="role"><span class="ic">⭐</span><div><b>Confiance</b><span>La marchandise est vérifiée par <strong>photos</strong>, et chacun reçoit des <strong>notes &amp; avis</strong> — on sait à qui on a affaire.</span></div></div>
+      <div class="role"><span class="ic">🤲</span><div><b>Pour tout le monde</b><span>Pensée pour le terrain (faible réseau, peu de lecture) ; un <strong>agent</strong> peut aider ceux qui en ont besoin.</span></div></div>
+    </div>
+
+    <p class="eyebrow">Le parcours d'une vente</p>
+    <ol class="flow">
+      <li>Le producteur <strong>publie</strong> un produit.</li>
+      <li>L'acheteur <strong>commande</strong> et <strong>paie</strong> ; le producteur marque <strong>« Ma commande est prête »</strong>.</li>
+      <li>Un livreur <strong>accepte</strong> la mission et va <strong>charger</strong> chez le producteur (vérification par photos, co-signée par le producteur).</li>
+      <li>Le livreur <strong>livre</strong> l'acheteur.</li>
+      <li>L'acheteur donne un <strong>code à 6 chiffres</strong> ; une fois saisi, l'argent est <strong>réparti automatiquement</strong> (producteur + livreur payés).</li>
+    </ol>
+
+    <div class="callout">
+      <b>🎯 Ce qu'on teste surtout cette fois</b>
+      <p>La mise à jour <strong>instantanée</strong> entre les 3 personnes. Dès qu'un acteur fait une action, les 2 autres doivent voir le changement <strong>tout de suite, sans rafraîchir</strong>.</p>
+    </div>
+
+    <div class="coord" style="margin-top:16px">
+      <b>📵 Les boutons Appeler / SMS / WhatsApp ne marcheront pas</b>
+      <p>Les numéros de test sont <strong>simulés</strong> — ils n'existent pas en vrai. Pour vous coordonner, utilisez vos <strong>vrais téléphones</strong> (appel / WhatsApp habituels), <strong>pas</strong> les boutons de contact dans l'app.</p>
+    </div>
+
+    <p class="eyebrow">À voir apparaître tout seul</p>
+    <table class="checks">
+      <tr><th>Quand…</th><th>…doit se voir aussitôt chez</th></tr>
+      <tr><td>L'acheteur paie</td><td>Producteur (Commandes) + Livreur (Missions)</td></tr>
+      <tr><td>Le livreur accepte</td><td>Producteur + Acheteur (statut)</td></tr>
+      <tr><td>Le livreur soumet la vérification</td><td>Producteur (à confirmer)</td></tr>
+      <tr><td>Le producteur confirme</td><td>Livreur (débloque « je charge »)</td></tr>
+      <tr><td>Le livreur part</td><td>Acheteur (« en route » + carte)</td></tr>
+      <tr><td>Le livreur saisit le code</td><td>Tous (commande terminée) + soldes crédités</td></tr>
+    </table>
+    <p class="footnote">Si un changement n'apparaît qu'après avoir quitté/rouvert l'écran → c'est un bug à signaler (qui / quelle action / quel écran / capture).</p>
+  </section>
+
+  <!-- ===================== TAB 2 : ÉQUIPE FRANCE ===================== -->
+  <section class="panel" id="p-fr" role="tabpanel" aria-labelledby="t-fr" hidden>
+    <h2>Équipe France 🇫🇷</h2>
+    <p class="lead">Trois personnes, un seul achat simulé au Bénin. Coordonnez-vous en direct (téléphone / WhatsApp) car chacun débloque l'étape du suivant.</p>
+
+    <div class="coord">
+      <b>⚠️ À décider ensemble avant de commencer</b>
+      <p>La <strong>même commune</strong> pour tous (ex. <em class="hi">Cotonou</em>) et le <strong>même produit</strong> (ex. <em class="hi">Tomate, 50&nbsp;kg</em>). Sinon le livreur n'apparaîtra pas à l'acheteuse.</p>
+      <p>📍 Vous êtes en France mais vous <strong>simulez un achat au Bénin</strong> : normal que les numéros soient en <strong>+229</strong> et les prix en <strong>FCFA</strong>.</p>
+      <p>📵 Les boutons <strong>Appeler / SMS / WhatsApp</strong> de l'app <strong>ne marchent pas</strong> (numéros simulés) — coordonnez-vous avec vos vrais téléphones.</p>
+      <span class="login-chip">🔑 Connexion : ton numéro + code <code>000000</code></span>
+    </div>
+
+    <!-- Ronald : producteur -->
+    <details class="fiche" open style="--b:var(--prod-bg);--l:var(--prod)">
+      <summary>
+        <span class="avatar">👨‍🌾</span>
+        <span class="who"><span class="name">Ronald</span><br><span class="badge">Producteur</span></span>
+        <span class="num">+229&nbsp;61000011</span>
+        <span class="chev">▸</span>
+      </summary>
+      <div class="fiche-body">
+        <p class="stage">Mise en place</p>
+        <ul class="steps">
+          <li>Accueil → <em class="hi">Commencer</em> → écran « Tu es… » → <strong>Producteur</strong> → <em class="hi">Continuer</em>.</li>
+          <li>Inscris-toi : ton nom + ton numéro + code <strong>000000</strong>. <span class="sub" style="display:inline">(Écran « vérification en attente » ? c'est normal : ferme et rouvre l'app.)</span></li>
+          <li>Onglet <strong>Produits</strong> → <em class="hi">Publier un produit</em>, en 3 étapes :</li>
+          <li class="sub"><strong>Étape 1</strong> : une <strong>photo</strong> + une <strong>catégorie</strong> (ex. Légumineuses) + une <strong>variété</strong> (ex. Tomate).</li>
+          <li class="sub"><strong>Étape 2</strong> : description, origine, récolte (facultatif).</li>
+          <li class="sub"><strong>Étape 3</strong> : <strong>quantité</strong> (50), <strong>unité</strong> (kg), <strong>prix</strong>, puis <strong>point de retrait</strong> sur votre commune → <b class="btn">Publier</b>.</li>
+        </ul>
+        <p class="stage">Quand la commande arrive</p>
+        <ul class="steps">
+          <li class="chk">Onglet <strong>Commandes → « À préparer »</strong> : la commande de Prisca apparaît <strong>toute seule</strong>.</li>
+          <li class="chk">La <strong>quantité disponible</strong> de ton produit <strong>diminue</strong> (décompte du stock).</li>
+          <li>Ouvre-la (<em class="hi">Préparer</em>) → <b class="btn">✓ Ma commande est prête</b>.</li>
+          <li class="chk">Quand Hermann accepte, le statut <strong>change tout seul</strong>.</li>
+        </ul>
+        <p class="stage">Chargement (Hermann est chez toi)</p>
+        <ul class="steps">
+          <li>Hermann prend les photos et soumet sa vérification. Ouvre la commande → <b class="btn">Confirmer</b> (tu co-signes).</li>
+          <li class="chk">Dès ton <em class="hi">✓ Vérification confirmée</em>, Hermann peut charger — il le voit aussitôt.</li>
+        </ul>
+        <p class="stage">Après livraison</p>
+        <ul class="steps">
+          <li class="chk">La commande passe dans <strong>« Terminées »</strong> toute seule ; ton <strong>solde augmente</strong> (onglet Argent).</li>
+          <li>Teste un <strong>retrait</strong> : ajoute un compte Mobile Money avec <strong>ton numéro de connexion</strong> (auto-vérifié) → demande le retrait.</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Hermann : livreur -->
+    <details class="fiche" style="--b:var(--livr-bg);--l:var(--livr)">
+      <summary>
+        <span class="avatar">🚚</span>
+        <span class="who"><span class="name">Hermann</span><br><span class="badge">Livreur</span></span>
+        <span class="num">+229&nbsp;61000012</span>
+        <span class="chev">▸</span>
+      </summary>
+      <div class="fiche-body">
+        <p class="stage">Mise en place (obligatoire pour être visible)</p>
+        <ul class="steps">
+          <li>Accueil → <em class="hi">Commencer</em> → « Tu es… » → <strong>Transporteur</strong> → inscris-toi (numéro + 000000).</li>
+          <li>Ajoute un <strong>véhicule</strong>, puis règle tes <strong>tarifs / ta zone</strong> sur votre commune. <em class="hi">Sans ça, tu n'apparais pas à Prisca.</em></li>
+        </ul>
+        <p class="stage">Recevoir la mission</p>
+        <ul class="steps">
+          <li class="chk">Onglet <strong>Missions → « Disponibles »</strong> : la mission apparaît <strong>toute seule</strong> quand Prisca paie.</li>
+          <li>Ouvre-la → <b class="btn">Accepter cette mission</b>.</li>
+          <li class="chk">Ronald &amp; Prisca voient le changement aussitôt.</li>
+        </ul>
+        <p class="stage">Charger chez le producteur</p>
+        <ul class="steps">
+          <li>Écran « Allez chez le producteur » → <b class="btn">Je suis arrivé chez le producteur</b>.</li>
+          <li><strong>Vérification</strong> : prends 2 photos (<em class="hi">Marchandise prête</em> + <em class="hi">Vue d'ensemble</em>), coche « Quantité conforme » + la checklist → <b class="btn">Soumettre la vérification</b>.</li>
+          <li class="chk">Attends que Ronald confirme ; l'écran affiche « …a co-signé. Vous pouvez charger. » → <b class="btn">Tout est conforme, je charge</b>.</li>
+        </ul>
+        <p class="stage">Livrer l'acheteuse</p>
+        <ul class="steps">
+          <li>Ta <strong>position GPS</strong> est partagée (Prisca te suit sur la carte).</li>
+          <li>Écran « Livrez chez l'acheteur » → <b class="btn">Je suis arrivé chez l'acheteur</b>.</li>
+          <li>Demande le <strong>code à 6 chiffres</strong> à Prisca, saisis-le → livraison validée.</li>
+          <li class="chk"><strong>Argent</strong> : ton solde augmente. Teste un <strong>retrait</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Prisca : acheteuse -->
+    <details class="fiche" style="--b:var(--achat-bg);--l:var(--achat)">
+      <summary>
+        <span class="avatar">🛒</span>
+        <span class="who"><span class="name">Prisca</span><br><span class="badge">Acheteuse</span></span>
+        <span class="num">+229&nbsp;61000013</span>
+        <span class="chev">▸</span>
+      </summary>
+      <div class="fiche-body">
+        <p class="stage">Commander</p>
+        <ul class="steps">
+          <li>Accueil → <em class="hi">Commencer</em> → « Tu es… » → <strong>Acheteur</strong> → inscris-toi (numéro + 000000).</li>
+          <li>Attends que Ronald ait publié, puis <strong>cherche le produit</strong> (accueil / recherche).</li>
+          <li>Ouvre la fiche produit → <b class="btn">Commander</b> → choisis la quantité.</li>
+          <li><strong>Mode de livraison</strong> — 3 choix possibles :</li>
+          <li class="sub"><em class="hi">Rapide</em> : le 1er transporteur disponible vient livrer.</li>
+          <li class="sub"><strong>« Choisir mon transporteur »</strong> ← <strong>à utiliser</strong> : sélectionne <strong>Hermann</strong> dans la liste de la zone.</li>
+          <li class="sub"><em class="hi">Je viens chercher moi-même</em> : retrait chez le producteur, 0 frais.</li>
+          <li class="chk"><strong>Paiement</strong> → <b class="btn">Simuler le paiement (DEV)</b> — Ronald &amp; Hermann voient la commande apparaître.</li>
+        </ul>
+        <p class="stage">Suivre la livraison</p>
+        <ul class="steps">
+          <li class="chk"><strong>Mes commandes</strong> → le statut évolue tout seul (accepté → prêt → chargement → en route).</li>
+          <li class="chk">« En route » : tu vois Hermann <strong>avancer sur la carte</strong>.</li>
+        </ul>
+        <p class="stage">Réception</p>
+        <ul class="steps">
+          <li>À l'arrivée, l'app affiche ton <strong>code à 6 chiffres</strong>.</li>
+          <li class="chk">Donne-le à Hermann (à l'oral) ; la commande passe à <strong>Terminée</strong>.</li>
+          <li><b class="btn">Noter</b> Ronald et Hermann (étoiles).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== TAB 3 : ÉQUIPE BÉNIN ===================== -->
+  <section class="panel" id="p-bj" role="tabpanel" aria-labelledby="t-bj" hidden>
+    <h2>Équipe Bénin 🇧🇯</h2>
+    <p class="lead">Mêmes rôles, même scénario, mêmes libellés. Les membres seront nommés plus tard — chacun se connecte avec le numéro de son rôle ci-dessous.</p>
+
+    <div class="coord">
+      <b>⚠️ À décider ensemble avant de commencer</b>
+      <p>La <strong>même commune</strong> pour tous et le <strong>même produit</strong> (ex. Tomate, 50&nbsp;kg). Sinon le livreur n'apparaîtra pas à l'acheteur.</p>
+      <p>📵 Les boutons <strong>Appeler / SMS / WhatsApp</strong> de l'app <strong>ne marchent pas</strong> (numéros simulés) — coordonnez-vous avec vos vrais téléphones.</p>
+      <span class="login-chip">🔑 Connexion : ton numéro + code <code>000000</code></span>
+    </div>
+
+    <details class="fiche" open style="--b:var(--prod-bg);--l:var(--prod)">
+      <summary>
+        <span class="avatar">👨‍🌾</span>
+        <span class="who"><span class="name">Producteur <span style="color:var(--muted);font-weight:600">(à définir)</span></span><br><span class="badge">Producteur</span></span>
+        <span class="num">+229&nbsp;61000021</span>
+        <span class="chev">▸</span>
+      </summary>
+      <div class="fiche-body">
+        <p class="stage">Mise en place</p>
+        <ul class="steps">
+          <li>Accueil → <em class="hi">Commencer</em> → « Tu es… » → <strong>Producteur</strong> → inscris-toi (numéro + 000000).</li>
+          <li><strong>Produits</strong> → <em class="hi">Publier</em> (3 étapes) : photo + catégorie + variété → description → <strong>quantité / unité / prix</strong> + <strong>point de retrait</strong> → <b class="btn">Publier</b>.</li>
+        </ul>
+        <p class="stage">Vente &amp; chargement</p>
+        <ul class="steps">
+          <li class="chk"><strong>Commandes → « À préparer »</strong> : la commande apparaît seule ; la <strong>quantité disponible baisse</strong>.</li>
+          <li>Ouvre (<em class="hi">Préparer</em>) → <b class="btn">✓ Ma commande est prête</b>.</li>
+          <li>À l'arrivée du livreur : ouvre la commande → <b class="btn">Confirmer</b> (co-signature).</li>
+        </ul>
+        <p class="stage">Après livraison</p>
+        <ul class="steps">
+          <li class="chk">Commande <strong>« Terminées »</strong> toute seule ; <strong>solde crédité</strong> (Argent).</li>
+          <li>Teste un <strong>retrait</strong> (compte Mobile Money à ton numéro de connexion).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fiche" style="--b:var(--livr-bg);--l:var(--livr)">
+      <summary>
+        <span class="avatar">🚚</span>
+        <span class="who"><span class="name">Livreur <span style="color:var(--muted);font-weight:600">(à définir)</span></span><br><span class="badge">Livreur</span></span>
+        <span class="num">+229&nbsp;61000022</span>
+        <span class="chev">▸</span>
+      </summary>
+      <div class="fiche-body">
+        <p class="stage">Mise en place (indispensable)</p>
+        <ul class="steps">
+          <li>Inscris-toi en <strong>Transporteur</strong> ; ajoute un <strong>véhicule</strong>.</li>
+          <li>Renseigne <strong>tarifs / zone</strong> sur votre commune. <em class="hi">Sans ça, tu n'apparais pas à l'acheteur.</em></li>
+        </ul>
+        <p class="stage">Mission &amp; chargement</p>
+        <ul class="steps">
+          <li class="chk"><strong>Missions → « Disponibles »</strong> : la mission apparaît seule → <b class="btn">Accepter cette mission</b>.</li>
+          <li><b class="btn">Je suis arrivé chez le producteur</b> → <strong>vérification</strong> (2 photos + « Quantité conforme » + checklist) → <b class="btn">Soumettre la vérification</b>.</li>
+          <li class="chk">Après confirmation du producteur → <b class="btn">Tout est conforme, je charge</b> (débloqué tout seul).</li>
+        </ul>
+        <p class="stage">Livraison</p>
+        <ul class="steps">
+          <li><b class="btn">Je suis arrivé chez l'acheteur</b> → saisis le <strong>code à 6 chiffres</strong> → validé.</li>
+          <li class="chk"><strong>Argent</strong> : solde crédité. Teste un <strong>retrait</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fiche" style="--b:var(--achat-bg);--l:var(--achat)">
+      <summary>
+        <span class="avatar">🛒</span>
+        <span class="who"><span class="name">Acheteur <span style="color:var(--muted);font-weight:600">(à définir)</span></span><br><span class="badge">Acheteur</span></span>
+        <span class="num">+229&nbsp;61000023</span>
+        <span class="chev">▸</span>
+      </summary>
+      <div class="fiche-body">
+        <p class="stage">Commander</p>
+        <ul class="steps">
+          <li>Inscris-toi en <strong>Acheteur</strong> ; attends la publication du producteur, puis <strong>cherche le produit</strong>.</li>
+          <li>Fiche produit → <b class="btn">Commander</b> → quantité → <strong>Mode de livraison</strong> → <strong>« Choisir mon transporteur »</strong> (celui de ton équipe).</li>
+          <li class="chk"><strong>Paiement</strong> → <b class="btn">Simuler le paiement (DEV)</b> — la commande apparaît chez les 2 autres.</li>
+        </ul>
+        <p class="stage">Suivre &amp; recevoir</p>
+        <ul class="steps">
+          <li class="chk"><strong>Mes commandes</strong> : statut qui évolue seul + livreur qui avance sur la <strong>carte</strong>.</li>
+          <li>À l'arrivée : donne le <strong>code à 6 chiffres</strong> ; commande <strong>Terminée</strong> → <b class="btn">Noter</b> les 2.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== TAB 4 : TOUT TESTER ===================== -->
+  <section class="panel" id="p-all" role="tabpanel" aria-labelledby="t-all" hidden>
+    <h2>Tester toute l'appli 🔎</h2>
+    <p class="lead">En plus du scénario d'achat coordonné, chacun explore un maximum de fonctions dans son espace. Note tout ce qui bugue, plante, ou n'est pas clair.</p>
+
+    <p class="eyebrow">👨‍🌾 Côté producteur</p>
+    <ul class="steps" style="--l:var(--prod)">
+      <li>Publier <strong>plusieurs produits</strong> (photos, catégories &amp; variétés variées, unités : kg, sac 50&nbsp;kg, bassine…, prix).</li>
+      <li>Vérifier que la <strong>quantité disponible baisse</strong> à chaque vente (décompte du stock).</li>
+      <li><strong>Modifier</strong> un produit, le retirer.</li>
+      <li>Compléter le <strong>profil / l'exploitation</strong> (photo, spécialités, localisation).</li>
+      <li>Voir les <strong>avis / notes</strong> reçus.</li>
+      <li>Consulter le <strong>portefeuille</strong> (Argent) et l'historique ; ouvrir un <strong>ticket d'aide</strong>.</li>
+    </ul>
+
+    <p class="eyebrow">🛒 Côté acheteur</p>
+    <ul class="steps" style="--l:var(--achat)">
+      <li><strong>Rechercher</strong> des produits (texte, et la recherche vocale si dispo), <strong>filtrer</strong>.</li>
+      <li><strong>Consulter</strong> une fiche produit en détail (photos, producteur, estimation des frais).</li>
+      <li>Tester les <strong>3 modes de livraison</strong> : <em class="hi">Rapide</em>, <em class="hi">Choisir mon transporteur</em>, <em class="hi">Je viens chercher moi-même</em> (retrait, 0 frais).</li>
+      <li>Laisser un <strong>avis / une note</strong> ; utiliser <strong>« J'ai un problème »</strong> (litige).</li>
+      <li>Gérer ses <strong>favoris</strong> et l'<strong>historique</strong> de commandes.</li>
+    </ul>
+
+    <p class="eyebrow">🚚 Côté livreur</p>
+    <ul class="steps" style="--l:var(--livr)">
+      <li>Gérer <strong>véhicules</strong>, <strong>tarifs</strong> et <strong>zones</strong>.</li>
+      <li>Parcourir les 3 onglets <strong>Disponibles / En cours / Historique</strong> et voir les <strong>badges</strong>.</li>
+      <li>Tester la <strong>ristourne</strong> (geste commercial) pendant une mission ; consulter le <strong>portefeuille</strong> + <strong>retrait</strong>.</li>
+    </ul>
+
+    <p class="eyebrow">🌍 Pour tout le monde</p>
+    <ul class="steps" style="--l:var(--green)">
+      <li>Ouvrir les <strong>Paramètres</strong> (icône engrenage / profil) : changer la <strong>Langue</strong> (Français / English), régler les <strong>Notifications</strong>.</li>
+      <li>Ajouter / changer la <strong>photo de profil</strong>.</li>
+      <li>Vérifier les <strong>notifications</strong> reçues (nouvelle commande, mission…).</li>
+      <li>Se <strong>déconnecter</strong> puis se reconnecter (numéro + 000000).</li>
+    </ul>
+
+    <div class="coord" style="margin-top:8px">
+      <b>📵 Rappels</b>
+      <p>Les boutons <strong>Appeler / SMS / WhatsApp</strong> ne marchent pas (numéros simulés). Le paiement se fait via <b class="btn">Simuler le paiement (DEV)</b>, sans argent réel. Les retraits sont en mode test.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function(){
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+    function select(tab){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      window.scrollTo({top:0, behavior:'auto'});
+    }
+    tabs.forEach(function(t, i){
+      t.addEventListener('click', function(){ select(t); });
+      t.addEventListener('keydown', function(e){
+        if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+          e.preventDefault();
+          var n = (i + (e.key==='ArrowRight'?1:tabs.length-1)) % tabs.length;
+          tabs[n].focus(); select(tabs[n]);
+        }
+      });
+    });
+  })();
+</script>
